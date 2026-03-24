@@ -2,8 +2,8 @@
 const files = [
   {
   name: "Anyway_V1.mp3",
-    url:https://pub-1a8fe616ae624b4faf.a22b54ba231c4.r2.dev/808s%20and%20heartbreak/808s%20%26%20Heartbreak/Anyway_V1.mp3
-  },
+    https://pub-1a8fe616ae624b4faf.a22b54ba231c4.r2.dev/808s%20and%20heartbreak/808s%20%26%20Heartbreak/Anyway_V1.mp3
+},
   {
     name: "Track 2.mp3",
     url: "https://your-cloudflare-url.com/track2.mp3"
