@@ -74,4 +74,29 @@ function renderFolder() {
   }
 }
 
-function open
+function openPlayer(file) {
+  trackTitle.textContent = file.name;
+  audioPlayer.src = file.url;
+  modal.style.display = "flex";
+}
+
+closeModal.onclick = () => {
+  modal.style.display = "none";
+  audioPlayer.pause();
+};
+
+window.onclick = e => {
+  if (e.target === modal) {
+    modal.style.display = "none";
+    audioPlayer.pause();
+  }
+};
+
+// Initialize
+(async () => {
+  const keys = await getAllKeys();
+  const mp3Paths = keys.filter(k => k.toLowerCase().endsWith(".mp3"));
+  folderTree = buildFolderTree(mp3Paths);
+  renderFolder();
+})();
+
