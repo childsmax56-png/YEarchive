@@ -1,8 +1,11 @@
-// Add your MP3 files here
+// Add your MP3 files her
 const files = [
   {
     name: "Anyway_V1.mp3",
-    url: "https://pub-1a8fe616ae624b4faf.a22b54ba231c4.r2.dev/808s%20and%20heartbreak/808s%20%26%20Heartbreak/Anyway_V1.mp3"
+    url: "https://yearchives.com/808s and heartbreak/808s & Heartbreak/Anyway_V1.mp3"
+  }
+];
+
   }
 ];
 
