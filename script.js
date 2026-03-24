@@ -1,8 +1,6 @@
 async function getAllKeys() {
-  const xmlText = await fetch("https://yearchives.com?list-type=2").then(r => r.text());
-  const parser = new DOMParser();
-  const xml = parser.parseFromString(xmlText, "application/xml");
-  return [...xml.getElementsByTagName("Key")].map(n => n.textContent);
+  const url = "https://yearchives-list.childsmax56.workers.dev";
+  return await fetch(url).then(r => r.json());
 }
 
 // Build folder tree from paths
@@ -76,28 +74,4 @@ function renderFolder() {
   }
 }
 
-function openPlayer(file) {
-  trackTitle.textContent = file.name;
-  audioPlayer.src = file.url;
-  modal.style.display = "flex";
-}
-
-closeModal.onclick = () => {
-  modal.style.display = "none";
-  audioPlayer.pause();
-};
-
-window.onclick = e => {
-  if (e.target === modal) {
-    modal.style.display = "none";
-    audioPlayer.pause();
-  }
-};
-
-// Initialize
-(async () => {
-  const keys = await getAllKeys();
-  const mp3Paths = keys.filter(k => k.toLowerCase().endsWith(".mp3"));
-  folderTree = buildFolderTree(mp3Paths);
-  renderFolder();
-})();
+function open
