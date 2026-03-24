@@ -1,15 +1,28 @@
-// Add your MP3 files here
-const files = [
-  {
- name: "Anyway_V1.mp3",
-    url: "https://yearchives.com/808s%20and%20heartbreak/808s%20%26%20Heartbreak/Anyway_V1.mp3"
-  },
-  {
-    name: "city in the sky.mp3",
-    url: "https://yearchives.com/Yandhi%20Era/Yandhi/10%20City%20In%20The%20Sky.mp3"
-  }
-  // Add more...
-];
+async function getAllKeys() {
+  const xmlText = await fetch("https://yearchives.com?list-type=2").then(r => r.text());
+  const parser = new DOMParser();
+  const xml = parser.parseFromString(xmlText, "application/xml");
+  return [...xml.getElementsByTagName("Key")].map(n => n.textContent);
+}
+
+// Build folder tree from paths
+function buildFolderTree(paths) {
+  const tree = {};
+
+  paths.forEach(path => {
+    const parts = path.split("/");
+    let current = tree;
+
+    parts.forEach((part, index) => {
+      if (!current[part]) {
+        current[part] = index === parts.length - 1 ? null : {};
+      }
+      current = current[part];
+    });
+  });
+
+  return tree;
+}
 
 const grid = document.getElementById("fileGrid");
 const modal = document.getElementById("audioModal");
@@ -17,17 +30,51 @@ const closeModal = document.getElementById("closeModal");
 const audioPlayer = document.getElementById("audioPlayer");
 const trackTitle = document.getElementById("trackTitle");
 
-// Build file grid
-files.forEach(file => {
-  const item = document.createElement("div");
-  item.className = "file-item";
-  item.innerHTML = `
-    <div class="file-icon">🎵</div>
-    <div class="filename">${file.name}</div>
-  `;
-  item.onclick = () => openPlayer(file);
-  grid.appendChild(item);
-});
+let folderTree = {};
+let currentPath = [];
+
+// Render current folder contents
+function renderFolder() {
+  grid.innerHTML = "";
+
+  let pointer = folderTree;
+  currentPath.forEach(p => pointer = pointer[p]);
+
+  // Back button
+  if (currentPath.length > 0) {
+    const back = document.createElement("div");
+    back.className = "file-item";
+    back.innerHTML = `<div class="file-icon">⬅️</div><div class="filename">Back</div>`;
+    back.onclick = () => {
+      currentPath.pop();
+      renderFolder();
+    };
+    grid.appendChild(back);
+  }
+
+  // Render folders + files
+  for (const name in pointer) {
+    const isFile = pointer[name] === null;
+
+    const item = document.createElement("div");
+    item.className = "file-item";
+
+    if (isFile) {
+      item.innerHTML = `<div class="file-icon">🎵</div><div class="filename">${name}</div>`;
+      const fullPath = [...currentPath, name].join("/");
+      const url = `https://yearchives.com/${encodeURIComponent(fullPath).replace(/%2F/g, "/")}`;
+      item.onclick = () => openPlayer({ name, url });
+    } else {
+      item.innerHTML = `<div class="file-icon">📁</div><div class="filename">${name}</div>`;
+      item.onclick = () => {
+        currentPath.push(name);
+        renderFolder();
+      };
+    }
+
+    grid.appendChild(item);
+  }
+}
 
 function openPlayer(file) {
   trackTitle.textContent = file.name;
@@ -47,3 +94,10 @@ window.onclick = e => {
   }
 };
 
+// Initialize
+(async () => {
+  const keys = await getAllKeys();
+  const mp3Paths = keys.filter(k => k.toLowerCase().endsWith(".mp3"));
+  folderTree = buildFolderTree(mp3Paths);
+  renderFolder();
+})();
