@@ -282,3 +282,46 @@ body.dark .topbar {
 body.dark .file-item {
   background: #1a1a1a;
 }
+/* ========================= */
+/*      BOTTOM MINI PLAYER   */
+/* ========================= */
+
+.mini-player {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 64px;
+  background: #ffffff;
+  border-top: 1px solid #ddd;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 18px;
+  z-index: 999;
+  transition: transform 0.3s ease;
+  transform: translateY(100%);
+}
+
+.mini-player.show {
+  transform: translateY(0);
+}
+
+.mini-info {
+  font-size: 14px;
+  letter-spacing: 0.15em;
+}
+
+.mini-controls button {
+  background: none;
+  border: none;
+  font-size: 22px;
+  cursor: pointer;
+}
+
+/* Dark mode */
+body.dark .mini-player {
+  background: #1a1a1a;
+  border-top: 1px solid #333;
+  color: #eee;
+}
