@@ -22,6 +22,22 @@ body {
   color: #4285f4;
 }
 
+/* Dark Mode Toggle Button */
+.theme-toggle {
+  margin-left: auto;
+  background: none;
+  border: none;
+  font-size: 22px;
+  cursor: pointer;
+  padding: 6px 10px;
+  border-radius: 8px;
+  transition: 0.2s;
+}
+
+.theme-toggle:hover {
+  background: rgba(0,0,0,0.07);
+}
+
 /* Search Bar */
 .search-bar {
   width: calc(100% - 40px);
@@ -122,4 +138,60 @@ body {
 .close:hover {
   color: #000;
 }
+
+/* ========================= */
+/*        DARK MODE          */
+/* ========================= */
+
+body.dark {
+  background: #1e1f22;
+  color: #e5e5e5;
+}
+
+body.dark .topbar {
+  background: #2a2b2f;
+  border-bottom: 1px solid #3a3b3f;
+  color: white;
+}
+
+body.dark .theme-toggle:hover {
+  background: rgba(255,255,255,0.1);
+}
+
+body.dark .search-bar {
+  background: #2a2b2f;
+  border: 1px solid #3a3b3f;
+  color: white;
+  box-shadow: none;
+}
+
+body.dark .file-item {
+  background: #2a2b2f;
+  border: 1px solid #3a3b3f;
+  color: white;
+  box-shadow: none;
+}
+
+body.dark .file-item:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 4px 12px rgba(255,255,255,0.08);
+}
+
+body.dark .filename {
+  color: #e5e5e5;
+}
+
+body.dark .modal-content {
+  background: #2a2b2f;
+  color: white;
+}
+
+body.dark .close {
+  color: #ccc;
+}
+
+body.dark .close:hover {
+  color: white;
+}
+
 
