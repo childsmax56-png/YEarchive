@@ -171,7 +171,40 @@ closeModal.onclick = () => {
   modal.style.display = "none";
   audioPlayer.pause();
 };
+// =========================
+//      MINI PLAYER
+// =========================
 
+const miniPlayer = document.getElementById("miniPlayer");
+const miniTitle = document.getElementById("miniTitle");
+const miniPlayPause = document.getElementById("miniPlayPause");
+
+// Sync mini-player with modal player
+function updateMiniPlayer(name) {
+  miniTitle.textContent = name;
+  miniPlayer.classList.add("show");
+  miniPlayer.classList.remove("hidden");
+}
+
+// Play/pause from mini-player
+miniPlayPause.addEventListener("click", () => {
+  if (audioPlayer.paused) {
+    audioPlayer.play();
+    miniPlayPause.textContent = "⏸";
+  } else {
+    audioPlayer.pause();
+    miniPlayPause.textContent = "▶️";
+  }
+});
+
+// Update icon when audio changes
+audioPlayer.addEventListener("play", () => {
+  miniPlayPause.textContent = "⏸";
+});
+
+audioPlayer.addEventListener("pause", () => {
+  miniPlayPause.textContent = "▶️";
+});
 window.onclick = e => {
   if (e.target === modal) {
     modal.style.display = "none";
