@@ -237,5 +237,82 @@ body.dark .loading-text {
   opacity: 0;
   pointer-events: none;
 }
+/* YZY Splash Screen */
+.loading-screen {
+  position: fixed;
+  inset: 0;
+  background: #f2f2f2;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+  transition: opacity 0.6s ease;
+}
 
+body.dark .loading-screen {
+  background: #111;
+}
+
+.splash-logo {
+  font-size: 32px;
+  font-weight: 700;
+  letter-spacing: 6px;
+  color: #111;
+  opacity: 0;
+  animation: fadeIn 1.2s ease forwards;
+}
+
+body.dark .splash-logo {
+  color: #eee;
+}
+
+.spinner {
+  width: 42px;
+  height: 42px;
+  border: 4px solid #ccc;
+  border-top-color: #111;
+  border-radius: 50%;
+  margin-top: 20px;
+  animation: spin 0.9s linear infinite;
+}
+
+body.dark .spinner {
+  border: 4px solid #444;
+  border-top-color: #eee;
+}
+
+@keyframes fadeIn {
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.loading-screen.hidden {
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* YZY-inspired neutral theme tweaks */
+body {
+  background: #f2f2f2;
+}
+
+body.dark {
+  background: #111;
+}
+
+.topbar {
+  background: #ffffff;
+}
+
+body.dark .topbar {
+  background: #1a1a1a;
+}
+
+.file-item {
+  background: #ffffff;
+}
+
+body.dark .file-item {
+  background: #1a1a1a;
+}
 
