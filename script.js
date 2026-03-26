@@ -22,6 +22,15 @@ themeToggle.addEventListener("click", () => {
 });
 
 // =========================
+//      LOADING SCREEN
+// =========================
+function hideLoadingScreen() {
+  const loader = document.getElementById("loadingScreen");
+  loader.classList.add("hidden");
+  setTimeout(() => loader.remove(), 400);
+}
+
+// =========================
 //   FETCH FILE KEYS
 // =========================
 
@@ -105,14 +114,12 @@ function renderFolder() {
     item.className = "file-item";
 
     if (isFile) {
-      // File
       item.innerHTML = `<div class="file-icon">🎵</div><div class="filename">${name}</div>`;
       const fullPath = [...currentPath, name].join("/");
       const url = `https://yearchives.com/${encodeURIComponent(fullPath).replace(/%2F/g, "/")}`;
       item.onclick = () => openPlayer({ name, url });
 
     } else {
-      // Folder — detect album cover
       let coverUrl = null;
       const folderPath = [...currentPath, name].join("/");
 
@@ -212,5 +219,7 @@ window.onclick = e => {
   const keys = await getAllKeys();
   const mp3Paths = keys.filter(k => k.toLowerCase().includes(".mp3"));
   folderTree = buildFolderTree(mp3Paths);
+
   renderFolder();
+  hideLoadingScreen(); // fade out loader
 })();
