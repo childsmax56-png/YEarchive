@@ -3,7 +3,6 @@
 // =========================
 const themeToggle = document.getElementById("themeToggle");
 
-// Load saved theme
 if (localStorage.getItem("theme") === "dark") {
   document.body.classList.add("dark");
   themeToggle.textContent = "☀️";
@@ -22,32 +21,28 @@ themeToggle.addEventListener("click", () => {
 });
 
 // =========================
-//      LOADING SCREEN
+//      SPLASH / LOADING
 // =========================
 function hideLoadingScreen() {
   const loader = document.getElementById("loadingScreen");
   loader.classList.add("hidden");
-  setTimeout(() => loader.remove(), 400);
+  setTimeout(() => loader.remove(), 600);
 }
 
 // =========================
 //   FETCH FILE KEYS
 // =========================
-
-// Fetch all file keys from your Worker
 async function getAllKeys() {
   const url = "https://yearchives-list.childsmax56.workers.dev";
   return await fetch(url).then(r => r.json());
 }
 
-// Build folder tree from paths
+// Build folder tree
 function buildFolderTree(paths) {
   const tree = {};
-
   paths.forEach(path => {
     const parts = path.split("/");
     let current = tree;
-
     parts.forEach((part, index) => {
       if (!current[part]) {
         current[part] = index === parts.length - 1 ? null : {};
@@ -55,25 +50,18 @@ function buildFolderTree(paths) {
       current = current[part];
     });
   });
-
   return tree;
 }
 
-// Flatten folder tree for search
+// Flatten tree for search
 function flattenTree(tree, prefix = "") {
   let results = [];
-
   for (const key in tree) {
     const value = tree[key];
     const fullPath = prefix ? `${prefix}/${key}` : key;
-
-    if (value === null) {
-      results.push(fullPath); // file
-    } else {
-      results = results.concat(flattenTree(value, fullPath)); // folder
-    }
+    if (value === null) results.push(fullPath);
+    else results = results.concat(flattenTree(value, fullPath));
   }
-
   return results;
 }
 
@@ -87,14 +75,12 @@ const searchInput = document.getElementById("searchInput");
 let folderTree = {};
 let currentPath = [];
 
-// Render current folder contents
+// Render folder
 function renderFolder() {
   grid.innerHTML = "";
-
   let pointer = folderTree;
   currentPath.forEach(p => pointer = pointer[p]);
 
-  // Back button
   if (currentPath.length > 0) {
     const back = document.createElement("div");
     back.className = "file-item";
@@ -106,10 +92,8 @@ function renderFolder() {
     grid.appendChild(back);
   }
 
-  // Render folders + files
   for (const name in pointer) {
     const isFile = pointer[name] === null;
-
     const item = document.createElement("div");
     item.className = "file-item";
 
@@ -122,16 +106,11 @@ function renderFolder() {
     } else {
       let coverUrl = null;
       const folderPath = [...currentPath, name].join("/");
+      const covers = ["cover.jpg","cover.png","folder.jpg","folder.png"];
 
-      const possibleCovers = [
-        "cover.jpg", "cover.png",
-        "folder.jpg", "folder.png"
-      ];
-
-      for (const cover of possibleCovers) {
+      for (const cover of covers) {
         if (pointer[name] && pointer[name][cover] === null) {
-          const encoded = `https://yearchives.com/${encodeURIComponent(folderPath + "/" + cover).replace(/%2F/g, "/")}`;
-          coverUrl = encoded;
+          coverUrl = `https://yearchives.com/${encodeURIComponent(folderPath + "/" + cover).replace(/%2F/g, "/")}`;
           break;
         }
       }
@@ -150,52 +129,38 @@ function renderFolder() {
   }
 }
 
-// Search logic
+// Search
 function performSearch(query) {
   const allFiles = flattenTree(folderTree);
-
   const matches = allFiles.filter(path =>
     path.toLowerCase().includes(query.toLowerCase())
   );
-
   renderSearchResults(matches);
 }
 
-// Render search results
 function renderSearchResults(results) {
   grid.innerHTML = "";
-
   if (results.length === 0) {
     grid.innerHTML = "<div>No results found.</div>";
     return;
   }
-
   results.forEach(fullPath => {
-    const parts = fullPath.split("/");
-    const name = parts.pop();
+    const name = fullPath.split("/").pop();
     const url = `https://yearchives.com/${encodeURIComponent(fullPath).replace(/%2F/g, "/")}`;
-
     const item = document.createElement("div");
     item.className = "file-item";
     item.innerHTML = `<div class="file-icon">🎵</div><div class="filename">${name}</div>`;
     item.onclick = () => openPlayer({ name, url });
-
     grid.appendChild(item);
   });
 }
 
-// Search bar listener
 searchInput.addEventListener("input", e => {
-  const query = e.target.value.trim();
-
-  if (query === "") {
-    renderFolder();
-  } else {
-    performSearch(query);
-  }
+  const q = e.target.value.trim();
+  q === "" ? renderFolder() : performSearch(q);
 });
 
-// Audio modal
+// Modal
 function openPlayer(file) {
   trackTitle.textContent = file.name;
   audioPlayer.src = file.url;
@@ -214,12 +179,12 @@ window.onclick = e => {
   }
 };
 
-// Initialize
+// Init
 (async () => {
   const keys = await getAllKeys();
   const mp3Paths = keys.filter(k => k.toLowerCase().includes(".mp3"));
   folderTree = buildFolderTree(mp3Paths);
 
   renderFolder();
-  hideLoadingScreen(); // fade out loader
+  hideLoadingScreen();
 })();
