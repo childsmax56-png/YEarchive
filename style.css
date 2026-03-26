@@ -1,7 +1,18 @@
+/* ========================= */
+/*      GLOBAL YZY TEXT      */
+/* ========================= */
+
+* {
+  font-family: "Inter", Arial, sans-serif;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.20em;
+  font-stretch: condensed;
+}
+
 /* Global */
 body {
   margin: 0;
-  font-family: "Inter", Arial, sans-serif;
   background: #f5f7fa;
   color: #333;
 }
@@ -11,11 +22,9 @@ body {
   background: white;
   padding: 16px 24px;
   font-size: 22px;
-  font-weight: 600;
   border-bottom: 1px solid #e5e7eb;
   display: flex;
   align-items: center;
-  letter-spacing: -0.5px;
 }
 
 .logo {
@@ -193,51 +202,11 @@ body.dark .close {
 body.dark .close:hover {
   color: white;
 }
-/* Loading Screen */
-.loading-screen {
-  position: fixed;
-  inset: 0;
-  background: #f5f7fa;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  z-index: 9999;
-  transition: opacity 0.4s ease;
-}
 
-body.dark .loading-screen {
-  background: #1e1f22;
-}
+/* ========================= */
+/*      YZY SPLASH SCREEN    */
+/* ========================= */
 
-.spinner {
-  width: 48px;
-  height: 48px;
-  border: 5px solid #ddd;
-  border-top-color: #4285f4;
-  border-radius: 50%;
-  animation: spin 0.9s linear infinite;
-}
-
-@keyframes spin {
-  to { transform: rotate(360deg); }
-}
-
-.loading-text {
-  margin-top: 16px;
-  font-size: 16px;
-  color: #555;
-}
-
-body.dark .loading-text {
-  color: #ccc;
-}
-
-.loading-screen.hidden {
-  opacity: 0;
-  pointer-events: none;
-}
-/* YZY Splash Screen */
 .loading-screen {
   position: fixed;
   inset: 0;
@@ -256,9 +225,7 @@ body.dark .loading-screen {
 
 .splash-logo {
   font-size: 32px;
-  font-weight: 700;
   letter-spacing: 6px;
-  color: #111;
   opacity: 0;
   animation: fadeIn 1.2s ease forwards;
 }
@@ -315,4 +282,3 @@ body.dark .topbar {
 body.dark .file-item {
   background: #1a1a1a;
 }
-
