@@ -160,31 +160,57 @@ searchInput.addEventListener("input", e => {
   q === "" ? renderFolder() : performSearch(q);
 });
 
-// Modal
-function openPlayer(file) {
-  trackTitle.textContent = file.name;
-  audioPlayer.src = file.url;
-  modal.style.display = "flex";
-}
-
-closeModal.onclick = () => {
-  modal.style.display = "none";
-  audioPlayer.pause();
-};
 // =========================
 //      MINI PLAYER
 // =========================
 
 const miniPlayer = document.getElementById("miniPlayer");
 const miniTitle = document.getElementById("miniTitle");
+const miniCover = document.getElementById("miniCover");
 const miniPlayPause = document.getElementById("miniPlayPause");
+const miniPrev = document.getElementById("miniPrev");
+const miniNext = document.getElementById("miniNext");
+const miniProgressBar = document.getElementById("miniProgressBar");
+
+let playQueue = [];
+let currentIndex = 0;
 
 // Sync mini-player with modal player
-function updateMiniPlayer(name) {
-  miniTitle.textContent = name;
+function updateMiniPlayer(file) {
+  miniTitle.textContent = file.name;
+
+  // Album cover guess
+  const folder = file.name.split("/")[0];
+  miniCover.src = `https://yearchives.com/${folder}/cover.jpg`;
+
   miniPlayer.classList.add("show");
   miniPlayer.classList.remove("hidden");
+
+  // Add to queue
+  if (!playQueue.find(f => f.url === file.url)) {
+    playQueue.push(file);
+    currentIndex = playQueue.length - 1;
+  }
 }
+
+// =========================
+//      OPEN PLAYER
+// =========================
+function openPlayer(file) {
+  trackTitle.textContent = file.name;
+  audioPlayer.src = file.url;
+  modal.style.display = "flex";
+
+  updateMiniPlayer(file);
+
+  miniPlayPause.textContent = "⏸";
+  audioPlayer.play();
+}
+
+closeModal.onclick = () => {
+  modal.style.display = "none";
+  audioPlayer.pause();
+};
 
 // Play/pause from mini-player
 miniPlayPause.addEventListener("click", () => {
@@ -197,6 +223,28 @@ miniPlayPause.addEventListener("click", () => {
   }
 });
 
+// Next track
+miniNext.addEventListener("click", () => {
+  if (currentIndex < playQueue.length - 1) {
+    currentIndex++;
+    openPlayer(playQueue[currentIndex]);
+  }
+});
+
+// Previous track
+miniPrev.addEventListener("click", () => {
+  if (currentIndex > 0) {
+    currentIndex--;
+    openPlayer(playQueue[currentIndex]);
+  }
+});
+
+// Progress bar sync
+audioPlayer.addEventListener("timeupdate", () => {
+  const percent = (audioPlayer.currentTime / audioPlayer.duration) * 100;
+  miniProgressBar.style.setProperty("--progress", `${percent}%`);
+});
+
 // Update icon when audio changes
 audioPlayer.addEventListener("play", () => {
   miniPlayPause.textContent = "⏸";
@@ -205,6 +253,8 @@ audioPlayer.addEventListener("play", () => {
 audioPlayer.addEventListener("pause", () => {
   miniPlayPause.textContent = "▶️";
 });
+
+// Close modal by clicking outside
 window.onclick = e => {
   if (e.target === modal) {
     modal.style.display = "none";
