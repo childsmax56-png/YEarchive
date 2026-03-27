@@ -1,358 +1,297 @@
 /* ========================= */
-/*      BOTTOM MINI PLAYER   */
+/*      GLOBAL YZY TEXT      */
 /* ========================= */
 
-.mini-player {
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  height: 72px;
-  background: #ffffff;
-  border-top: 1px solid #ddd;
-  display: flex;
-  align-items: center;
-  padding: 0 16px;
-  gap: 14px;
-  z-index: 999;
-  transform: translateY(100%);
-  transition: transform 0.3s ease;
-}
-
-.mini-player.show {
-  transform: translateY(0);
-}
-
-/* Album cover thumbnail */
-.mini-cover {
-  width: 48px;
-  height: 48px;
-  border-radius: 6px;
-  object-fit: cover;
-  background: #e5e5e5;
-}
-
-/* Track info */
-.mini-info {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-}
-
+body,
+.topbar,
+.logo,
+.search-bar,
+.filename,
+.modal-content,
+.loading-text,
+.splash-logo,
+#trackTitle,
 .mini-info span {
-  font-size: 14px;
-  letter-spacing: 0.15em;
-  overflow: hidden;
-  white-space: nowrap;
-  text-overflow: ellipsis;
+  font-family: "Inter", Arial, sans-serif;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.20em;
+  font-stretch: condensed;
 }
 
-/* Progress bar */
-.mini-progress {
-  width: 100%;
-  height: 3px;
-  background: #ddd;
-  margin-top: 6px;
-  border-radius: 3px;
-  overflow: hidden;
-  position: relative;
+/* Global */
+body {
+  margin: 0;
+  background: #f5f7fa;
+  color: #333;
 }
 
-.mini-progress::after {
-  content: "";
-  position: absolute;
-  left: 0;
-  top: 0;
-  height: 100%;
-  width: var(--progress, 0%);
-  background: #4285f4;
-  transition: width 0.1s linear;
-}
-
-/* Controls */
-.mini-controls {
+/* Top Bar */
+.topbar {
+  background: white;
+  padding: 16px 24px;
+  font-size: 22px;
+  border-bottom: 1px solid #e5e7eb;
   display: flex;
   align-items: center;
-  gap: 12px;
 }
 
-.mini-controls button {
+.logo {
+  color: #4285f4;
+}
+
+/* Dark Mode Toggle Button */
+.theme-toggle {
+  margin-left: auto;
   background: none;
   border: none;
   font-size: 22px;
   cursor: pointer;
-  padding: 4px;
+  padding: 6px 10px;
+  border-radius: 8px;
   transition: 0.2s;
 }
 
-.mini-controls button:hover {
-  opacity: 0.7;
+.theme-toggle:hover {
+  background: rgba(0,0,0,0.07);
 }
 
-/* ========================= */
-/*      DARK MODE SUPPORT    */
-/* ========================= */
-
-body.dark .mini-player {
-  background: #1a1a1a;
-  border-top: 1px solid #333;
-  color: #eee;
+/* Search Bar */
+.search-bar {
+  width: calc(100% - 40px);
+  margin: 20px;
+  padding: 14px 16px;
+  font-size: 16px;
+  border-radius: 10px;
+  border: 1px solid #d0d7de;
+  background: white;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.04);
+  transition: 0.2s;
 }
 
-body.dark .mini-cover {
-  background: #333;
+.search-bar:focus {
+  outline: none;
+  border-color: #4285f4;
+  box-shadow: 0 0 0 3px rgba(66,133,244,0.2);
 }
 
-body.dark .mini-progress {
-  background: #333;
+/* File Grid */
+.file-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
+  gap: 24px;
+  padding: 20px;
 }
 
-body.dark .mini-progress::after {
-  background: #eee;
+/* File/Folder Card */
+.file-item {
+  background: white;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  padding: 18px 12px;
+  text-align: center;
+  cursor: pointer;
+  transition: 0.2s ease;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.05);
 }
 
-body.dark .mini-controls button {
-  color: #eee;
-}
-/* ========================= */
-/*      BOTTOM MINI PLAYER   */
-/* ========================= */
-
-.mini-player {
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  height: 72px;
-  background: #ffffff;
-  border-top: 1px solid #ddd;
-  display: flex;
-  align-items: center;
-  justify-content: flex-start;
-  padding: 0 16px;
-  gap: 14px;
-  z-index: 999;
-  transform: translateY(100%);
-  transition: transform 0.3s ease;
+.file-item:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.12);
 }
 
-.mini-player.show {
-  transform: translateY(0);
+/* Icons */
+.file-icon {
+  font-size: 42px;
+  color: #4285f4;
+  margin-bottom: 12px;
 }
 
-/* Album cover thumbnail */
-.mini-cover {
-  width: 48px;
-  height: 48px;
-  border-radius: 6px;
+/* Album Cover */
+.album-cover {
+  width: 70px;
+  height: 70px;
   object-fit: cover;
-  background: #e5e5e5;
+  border-radius: 8px;
+  margin-bottom: 10px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.15);
 }
 
-/* Track info */
-.mini-info {
-  flex: 1;
+/* Filename */
+.filename {
+  font-size: 15px;
+  color: #333;
+  word-break: break-word;
+  margin-top: 6px;
+}
+
+/* Modal */
+.modal {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.55);
+  justify-content: center;
+  align-items: center;
+  backdrop-filter: blur(4px);
+}
+
+.modal-content {
+  background: white;
+  padding: 24px;
+  width: 90%;
+  max-width: 420px;
+  border-radius: 14px;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+}
+
+.close {
+  float: right;
+  font-size: 26px;
+  cursor: pointer;
+  color: #666;
+  transition: 0.2s;
+}
+
+.close:hover {
+  color: #000;
+}
+
+/* ========================= */
+/*        DARK MODE          */
+/* ========================= */
+
+body.dark {
+  background: #1e1f22;
+  color: #e5e5e5;
+}
+
+body.dark .topbar {
+  background: #2a2b2f;
+  border-bottom: 1px solid #3a3b3f;
+  color: white;
+}
+
+body.dark .theme-toggle:hover {
+  background: rgba(255,255,255,0.1);
+}
+
+body.dark .search-bar {
+  background: #2a2b2f;
+  border: 1px solid #3a3b3f;
+  color: white;
+  box-shadow: none;
+}
+
+body.dark .file-item {
+  background: #2a2b2f;
+  border: 1px solid #3a3b3f;
+  color: white;
+  box-shadow: none;
+}
+
+body.dark .file-item:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 4px 12px rgba(255,255,255,0.08);
+}
+
+body.dark .filename {
+  color: #e5e5e5;
+}
+
+body.dark .modal-content {
+  background: #2a2b2f;
+  color: white;
+}
+
+body.dark .close {
+  color: #ccc;
+}
+
+body.dark .close:hover {
+  color: white;
+}
+
+/* ========================= */
+/*      YZY SPLASH SCREEN    */
+/* ========================= */
+
+.loading-screen {
+  position: fixed;
+  inset: 0;
+  background: #f2f2f2;
   display: flex;
   flex-direction: column;
   justify-content: center;
-}
-
-.mini-info span {
-  font-size: 14px;
-  letter-spacing: 0.15em;
-  overflow: hidden;
-  white-space: nowrap;
-  text-overflow: ellipsis;
-}
-
-/* Progress bar */
-.mini-progress {
-  width: 100%;
-  height: 3px;
-  background: #ddd;
-  margin-top: 6px;
-  border-radius: 3px;
-  overflow: hidden;
-  position: relative;
-}
-
-.mini-progress::after {
-  content: "";
-  display: block;
-  position: absolute;
-  left: 0;
-  top: 0;
-  height: 100%;
-  width: var(--progress, 0%);
-  background: #4285f4;
-  transition: width 0.1s linear;
-}
-
-/* Controls */
-.mini-controls {
-  display: flex;
   align-items: center;
-  gap: 12px;
+  z-index: 9999;
+  transition: opacity 0.6s ease;
 }
 
-.mini-controls button {
-  background: none;
-  border: none;
-  font-size: 22px;
-  cursor: pointer;
-  padding: 4px;
-  transition: 0.2s;
+body.dark .loading-screen {
+  background: #111;
 }
 
-.mini-controls button:hover {
-  opacity: 0.7;
+.splash-logo {
+  font-size: 32px;
+  letter-spacing: 6px;
+  opacity: 0;
+  animation: fadeIn 1.2s ease forwards;
 }
 
-/* ========================= */
-/*      DARK MODE SUPPORT    */
-/* ========================= */
-
-body.dark .mini-player {
-  background: #1a1a1a;
-  border-top: 1px solid #333;
+body.dark .splash-logo {
   color: #eee;
 }
 
-body.dark .mini-cover {
-  background: #333;
+.spinner {
+  width: 42px;
+  height: 42px;
+  border: 4px solid #ccc;
+  border-top-color: #111;
+  border-radius: 50%;
+  margin-top: 20px;
+  animation: spin 0.9s linear infinite;
 }
 
-body.dark .mini-progress {
-  background: #333;
+body.dark .spinner {
+  border: 4px solid #444;
+  border-top-color: #eee;
 }
 
-body.dark .mini-progress::after {
-  background: #eee;
+@keyframes fadeIn {
+  to { opacity: 1; transform: translateY(0); }
 }
 
-body.dark .mini-controls button {
-  color: #eee;
+.loading-screen.hidden {
+  opacity: 0;
+  pointer-events: none;
 }
-/* ========================= */
-/*      BOTTOM MINI PLAYER   */
-/* ========================= */
 
-.mini-player {
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  height: 72px;
+/* YZY-inspired neutral theme tweaks */
+body {
+  background: #f2f2f2;
+}
+
+body.dark {
+  background: #111;
+}
+
+.topbar {
   background: #ffffff;
-  border-top: 1px solid #ddd;
-  display: flex;
-  align-items: center;
-  justify-content: flex-start;
-  padding: 0 16px;
-  gap: 14px;
-  z-index: 999;
-  transform: translateY(100%);
-  transition: transform 0.3s ease;
 }
 
-.mini-player.show {
-  transform: translateY(0);
-}
-
-/* Album cover thumbnail */
-.mini-cover {
-  width: 48px;
-  height: 48px;
-  border-radius: 6px;
-  object-fit: cover;
-  background: #e5e5e5;
-}
-
-/* Track info */
-.mini-info {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-}
-
-.mini-info span {
-  font-size: 14px;
-  letter-spacing: 0.15em;
-  overflow: hidden;
-  white-space: nowrap;
-  text-overflow: ellipsis;
-}
-
-/* Progress bar */
-.mini-progress {
-  width: 100%;
-  height: 3px;
-  background: #ddd;
-  margin-top: 6px;
-  border-radius: 3px;
-  overflow: hidden;
-  position: relative;
-}
-
-.mini-progress::after {
-  content: "";
-  display: block;
-  position: absolute;
-  left: 0;
-  top: 0;
-  height: 100%;
-  width: var(--progress, 0%);
-  background: #4285f4;
-  transition: width 0.1s linear;
-}
-
-/* Controls */
-.mini-controls {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-}
-
-.mini-controls button {
-  background: none;
-  border: none;
-  font-size: 22px;
-  cursor: pointer;
-  padding: 4px;
-  transition: 0.2s;
-}
-
-.mini-controls button:hover {
-  opacity: 0.7;
-}
-
-/* ========================= */
-/*      DARK MODE SUPPORT    */
-/* ========================= */
-
-body.dark .mini-player {
+body.dark .topbar {
   background: #1a1a1a;
-  border-top: 1px solid #333;
-  color: #eee;
 }
 
-body.dark .mini-cover {
-  background: #333;
+.file-item {
+  background: #ffffff;
 }
 
-body.dark .mini-progress {
-  background: #333;
+body.dark .file-item {
+  background: #1a1a1a;
 }
 
-body.dark .mini-progress::after {
-  background: #eee;
-}
-
-body.dark .mini-controls button {
-  color: #eee;
-}
 /* ========================= */
 /*      BOTTOM MINI PLAYER   */
 /* ========================= */
