@@ -75,7 +75,56 @@ const searchInput = document.getElementById("searchInput");
 let folderTree = {};
 let currentPath = [];
 
-// Render folder
+// =========================
+//   MP3 COVER EXTRACTION
+// =========================
+function extractCoverFromMP3(url, callback) {
+  // jsmediatags must be loaded via CDN in HTML
+  new jsmediatags.Reader(url)
+    .setTagsToRead(["picture"])
+    .read({
+      onSuccess: tag => {
+        const pic = tag.tags.picture;
+        if (!pic) return callback(null);
+
+        const base64 = `data:${pic.format};base64,${btoa(
+          pic.data.reduce((data, byte) => data + String.fromCharCode(byte), "")
+        )}`;
+
+        callback(base64);
+      },
+      onError: () => callback(null)
+    });
+}
+
+// =========================
+//      MINI PLAYER
+// =========================
+const miniPlayer = document.getElementById("miniPlayer");
+const miniTitle = document.getElementById("miniTitle");
+const miniCover = document.getElementById("miniCover");
+const miniPlayPause = document.getElementById("miniPlayPause");
+const miniPrev = document.getElementById("miniPrev");
+const miniNext = document.getElementById("miniNext");
+const miniProgressBar = document.getElementById("miniProgressBar");
+
+let playQueue = [];
+let currentIndex = 0;
+
+function updateMiniPlayer(file) {
+  miniTitle.textContent = file.name;
+  miniPlayer.classList.add("show");
+  miniPlayer.classList.remove("hidden");
+
+  if (!playQueue.find(f => f.url === file.url)) {
+    playQueue.push(file);
+    currentIndex = playQueue.length - 1;
+  }
+}
+
+// =========================
+//      RENDER FOLDER
+// =========================
 function renderFolder() {
   grid.innerHTML = "";
   let pointer = folderTree;
@@ -104,20 +153,23 @@ function renderFolder() {
       item.onclick = () => openPlayer({ name, url });
 
     } else {
-      let coverUrl = null;
+      // Folder: default icon first
+      item.innerHTML = `<div class="file-icon">📁</div><div class="filename">${name}</div>`;
       const folderPath = [...currentPath, name].join("/");
-      const covers = ["cover.jpg","cover.png","folder.jpg","folder.png"];
+      const folderObj = pointer[name];
 
-      for (const cover of covers) {
-        if (pointer[name] && pointer[name][cover] === null) {
-          coverUrl = `https://yearchives.com/${encodeURIComponent(folderPath + "/" + cover).replace(/%2F/g, "/")}`;
-          break;
-        }
+      // Try to use first MP3 inside this folder for cover
+      const mp3s = Object.keys(folderObj).filter(f => f.toLowerCase().endsWith(".mp3"));
+      if (mp3s.length > 0) {
+        const firstMP3Path = `${folderPath}/${mp3s[0]}`;
+        const mp3Url = `https://yearchives.com/${encodeURIComponent(firstMP3Path).replace(/%2F/g, "/")}`;
+
+        extractCoverFromMP3(mp3Url, cover => {
+          if (cover) {
+            item.innerHTML = `<img src="${cover}" class="album-cover"><div class="filename">${name}</div>`;
+          }
+        });
       }
-
-      item.innerHTML = coverUrl
-        ? `<img src="${coverUrl}" class="album-cover"><div class="filename">${name}</div>`
-        : `<div class="file-icon">📁</div><div class="filename">${name}</div>`;
 
       item.onclick = () => {
         currentPath.push(name);
@@ -129,7 +181,9 @@ function renderFolder() {
   }
 }
 
-// Search
+// =========================
+//         SEARCH
+// =========================
 function performSearch(query) {
   const allFiles = flattenTree(folderTree);
   const matches = allFiles.filter(path =>
@@ -161,48 +215,23 @@ searchInput.addEventListener("input", e => {
 });
 
 // =========================
-//      MINI PLAYER
-// =========================
-
-const miniPlayer = document.getElementById("miniPlayer");
-const miniTitle = document.getElementById("miniTitle");
-const miniCover = document.getElementById("miniCover");
-const miniPlayPause = document.getElementById("miniPlayPause");
-const miniPrev = document.getElementById("miniPrev");
-const miniNext = document.getElementById("miniNext");
-const miniProgressBar = document.getElementById("miniProgressBar");
-
-let playQueue = [];
-let currentIndex = 0;
-
-// Sync mini-player with modal player
-function updateMiniPlayer(file) {
-  miniTitle.textContent = file.name;
-
-  // Album cover guess
-  const folder = file.name.split("/")[0];
-  miniCover.src = `https://yearchives.com/${folder}/cover.jpg`;
-
-  miniPlayer.classList.add("show");
-  miniPlayer.classList.remove("hidden");
-
-  // Add to queue
-  if (!playQueue.find(f => f.url === file.url)) {
-    playQueue.push(file);
-    currentIndex = playQueue.length - 1;
-  }
-}
-
-// =========================
-//      OPEN PLAYER
+//       OPEN PLAYER
 // =========================
 function openPlayer(file) {
   trackTitle.textContent = file.name;
   audioPlayer.src = file.url;
   modal.style.display = "flex";
 
-  updateMiniPlayer(file);
+  // Extract embedded album art for mini-player + modal
+  extractCoverFromMP3(file.url, cover => {
+    if (cover) {
+      miniCover.src = cover;
+    } else {
+      miniCover.removeAttribute("src"); // fallback to gray bg
+    }
+  });
 
+  updateMiniPlayer(file);
   miniPlayPause.textContent = "⏸";
   audioPlayer.play();
 }
@@ -212,7 +241,9 @@ closeModal.onclick = () => {
   audioPlayer.pause();
 };
 
-// Play/pause from mini-player
+// =========================
+//   MINI PLAYER CONTROLS
+// =========================
 miniPlayPause.addEventListener("click", () => {
   if (audioPlayer.paused) {
     audioPlayer.play();
@@ -223,7 +254,6 @@ miniPlayPause.addEventListener("click", () => {
   }
 });
 
-// Next track
 miniNext.addEventListener("click", () => {
   if (currentIndex < playQueue.length - 1) {
     currentIndex++;
@@ -231,7 +261,6 @@ miniNext.addEventListener("click", () => {
   }
 });
 
-// Previous track
 miniPrev.addEventListener("click", () => {
   if (currentIndex > 0) {
     currentIndex--;
@@ -239,13 +268,12 @@ miniPrev.addEventListener("click", () => {
   }
 });
 
-// Progress bar sync
 audioPlayer.addEventListener("timeupdate", () => {
+  if (!audioPlayer.duration) return;
   const percent = (audioPlayer.currentTime / audioPlayer.duration) * 100;
   miniProgressBar.style.setProperty("--progress", `${percent}%`);
 });
 
-// Update icon when audio changes
 audioPlayer.addEventListener("play", () => {
   miniPlayPause.textContent = "⏸";
 });
@@ -262,7 +290,9 @@ window.onclick = e => {
   }
 };
 
-// Init
+// =========================
+//          INIT
+// =========================
 (async () => {
   const keys = await getAllKeys();
   const mp3Paths = keys.filter(k => k.toLowerCase().includes(".mp3"));
