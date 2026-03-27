@@ -19,16 +19,19 @@ body,
   font-stretch: condensed;
 }
 
-/* Global */
+/* ========================= */
+/*          GLOBAL           */
+/* ========================= */
+
 body {
   margin: 0;
-  background: #f5f7fa;
+  background: #f2f2f2;
   color: #333;
 }
 
 /* Top Bar */
 .topbar {
-  background: white;
+  background: #ffffff;
   padding: 16px 24px;
   font-size: 22px;
   border-bottom: 1px solid #e5e7eb;
@@ -85,7 +88,7 @@ body {
 
 /* File/Folder Card */
 .file-item {
-  background: white;
+  background: #ffffff;
   border: 1px solid #e5e7eb;
   border-radius: 12px;
   padding: 18px 12px;
@@ -107,7 +110,7 @@ body {
   margin-bottom: 12px;
 }
 
-/* Album Cover */
+/* Album Cover (grid) */
 .album-cover {
   width: 70px;
   height: 70px;
@@ -125,7 +128,10 @@ body {
   margin-top: 6px;
 }
 
-/* Modal */
+/* ========================= */
+/*          MODAL            */
+/* ========================= */
+
 .modal {
   display: none;
   position: fixed;
@@ -162,12 +168,12 @@ body {
 /* ========================= */
 
 body.dark {
-  background: #1e1f22;
+  background: #111;
   color: #e5e5e5;
 }
 
 body.dark .topbar {
-  background: #2a2b2f;
+  background: #1a1a1a;
   border-bottom: 1px solid #3a3b3f;
   color: white;
 }
@@ -184,7 +190,7 @@ body.dark .search-bar {
 }
 
 body.dark .file-item {
-  background: #2a2b2f;
+  background: #1a1a1a;
   border: 1px solid #3a3b3f;
   color: white;
   box-shadow: none;
@@ -232,6 +238,11 @@ body.dark .loading-screen {
   background: #111;
 }
 
+.loading-text {
+  margin-top: 16px;
+  font-size: 14px;
+}
+
 .splash-logo {
   font-size: 32px;
   letter-spacing: 6px;
@@ -262,34 +273,13 @@ body.dark .spinner {
   to { opacity: 1; transform: translateY(0); }
 }
 
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
 .loading-screen.hidden {
   opacity: 0;
   pointer-events: none;
-}
-
-/* YZY-inspired neutral theme tweaks */
-body {
-  background: #f2f2f2;
-}
-
-body.dark {
-  background: #111;
-}
-
-.topbar {
-  background: #ffffff;
-}
-
-body.dark .topbar {
-  background: #1a1a1a;
-}
-
-.file-item {
-  background: #ffffff;
-}
-
-body.dark .file-item {
-  background: #1a1a1a;
 }
 
 /* ========================= */
@@ -318,7 +308,7 @@ body.dark .file-item {
   transform: translateY(0);
 }
 
-/* Album cover thumbnail */
+/* Album cover thumbnail (mini-player) */
 .mini-cover {
   width: 48px;
   height: 48px;
@@ -386,10 +376,7 @@ body.dark .file-item {
   opacity: 0.7;
 }
 
-/* ========================= */
-/*      DARK MODE SUPPORT    */
-/* ========================= */
-
+/* Dark mode mini-player */
 body.dark .mini-player {
   background: #1a1a1a;
   border-top: 1px solid #333;
