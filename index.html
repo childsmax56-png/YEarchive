@@ -35,17 +35,24 @@
     </div>
   </div>
 
-  <script src="script.js"></script>
-  <!-- Bottom Mini Player -->
-<div id="miniPlayer" class="mini-player hidden">
-  <div class="mini-info">
-    <span id="miniTitle">Track Name</span>
+  <!-- Bottom Mini Player (FIXED POSITION) -->
+  <div id="miniPlayer" class="mini-player hidden">
+    <img id="miniCover" class="mini-cover" src="" alt="">
+    
+    <div class="mini-info">
+      <span id="miniTitle">Track Name</span>
+      <div id="miniProgressBar" class="mini-progress"></div>
+    </div>
+
+    <div class="mini-controls">
+      <button id="miniPrev">⏮</button>
+      <button id="miniPlayPause">⏸</button>
+      <button id="miniNext">⏭</button>
+    </div>
   </div>
 
-  <div class="mini-controls">
-    <button id="miniPlayPause">⏸</button>
-  </div>
-</div>
+  <!-- Script should ALWAYS be last -->
+  <script src="script.js"></script>
 
 </body>
 </html>
